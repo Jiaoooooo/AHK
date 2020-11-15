@@ -1,0 +1,224 @@
+;------------------------配置--------------------------*/
+#NoEnv
+#SingleInstance force
+#Persistent
+
+if not A_IsAdmin
+{
+	Run *RunAs "%A_ScriptFullPath%"
+	ExitApp
+}
+
+
+
+ifWinActive,ahk_class ConsoleWindowClass
+	winClose,ahk_class ConsoleWindowClass
+
+
+;做一个自定义打开文件夹或软件的GUI,就像https://www.songruihua.com/hk4win/那样
+
+;------------------------变量--------------------------*/
+
+global Config_Add := A_MyDocuments . "`\TEST.INI"		;脚本配置文件的存放路径和文件名
+
+;------------------------菜单设置--------------------------*/
+
+Menu, tray, add 
+Menu, tray, add, 文件直通车, showHotKeyforFile
+Return
+;------------------------窗口GUI开始--------------------------*/
+
+;------------------------GUI：绘制界面------------------------*/
+
+showHotKeyforFile:
+{
+	ifWinExist,文件直通车
+	{
+		WinActivate
+		Return
+	}
+	Gui, New
+	Gui, +Resize
+	Gui Add, Text, x10 y10 w50 h20 +0x200, 快捷键
+	Gui Add, Text, x+10 y10 w200 h20 +0x200, 对应的文件或程序地址
+	loop, 12
+	{
+		Gui Add, Text, x10 y+10 w50 h20 +0x200, Win+F%A_Index% =
+		Gui Add, Edit, x+15  w300 h20, 
+		Gui Add, Button, gWinF%A_Index%  x+15  w40 h20, +
+	}
+	Gui,Add,Text,x10 y+10 w480 h20,本工具用来给常用的程序或文件设置快捷键。
+	Gui,Add,Text,x10 y+10 w480 h20,点击右侧的“+”按钮，可以为指定的快捷键设定打开那个文件或程序。
+	
+	Gui Add, Button, gDone x10 y40 w30 h30, 保存
+
+	Gui Show, w500 h800, 文件直通车
+
+	GUI_Init()
+
+	return
+
+
+
+	;------------------------GUI：配置动作------------------------*/
+
+	GuiSize:  
+	if A_EventInfo = 1  
+		return
+	loop,12
+	{
+		GuiControl, Move, Button%A_Index%, % "X" . (A_GuiWidth - 46)
+		GuiControl, Move, Edit%A_Index%, % "w" . (A_GuiWidth - 130)
+	}
+	GuiControl,Move, 保存, %  "y" . (A_GuiHeight - 40) . "w" . (A_GuiWidth - 20)
+	return
+
+	GuiEscape:
+	GuiClose:
+		Gui, Destroy
+		Return
+
+
+	;------------------------GUI：按钮功能------------------------*/
+
+	ActionForButton(num)
+	{
+	  Gui,Submit ,NoHide
+	  FileSelectFile, SelectedFile, ,::{20d04fe0-3aea-1069-a2d8-08002b30309d} , 打开文件
+		if SelectedFile <>
+			ControlSetText,Edit%num%,%SelectedFile%,A
+		Return
+	}
+
+	WinF1:
+	{
+		ActionForButton(1)
+		Return
+	}
+	WinF2:
+	{
+		ActionForButton(2)
+		Return
+	}
+	WinF3:
+	{
+		ActionForButton(3)
+		Return
+	}
+	WinF4:
+	{
+		ActionForButton(4)
+		Return
+	}
+
+	WinF5:
+	{
+		ActionForButton(5)
+		Return
+	}
+
+	WinF6:
+	{
+		ActionForButton(6)
+		Return
+	}
+
+	WinF7:
+	{
+		ActionForButton(7)
+		Return
+	}
+
+	WinF8:
+	{
+		ActionForButton(8)
+		Return
+	}
+
+	WinF9:
+	{
+		ActionForButton(9)
+		Return
+	}
+
+	WinF10:
+	{
+		ActionForButton(10)
+		Return
+	}
+
+	WinF11:
+	{
+		ActionForButton(11)
+		Return
+	}
+	WinF12:
+	{
+		ActionForButton(12)
+		Return
+	}
+
+
+
+
+
+	Done:
+	{
+
+	Gui,Submit,NoHide
+	loop,12
+	{
+		ControlGetText,FileTextForWinF%A_Index%,Edit%A_Index%,A
+		IniWrite, % FileTextForWinF%A_Index%, %Config_Add%, HotKeyForFileConfig, HotkeyForFile%A_Index%
+	}
+	Return
+	}
+
+	}
+
+
+
+	GUI_Init()
+	{
+	loop,12
+	{
+		IniRead,TextStr,%Config_Add%,HotKeyForFileConfig,HotkeyForFile%A_Index%,%A_Space%
+		if TextStr <> 
+			ControlSetText,Edit%A_Index%,%TextStr%,A
+	}
+	Return
+}
+
+
+
+;------------------------窗口GUI结束--------------------------*/
+
+;------------------------快捷键设置------------------------*/
+
+#F1::ActionForHotKeyWinF(1)
+#F2::ActionForHotKeyWinF(2)
+#F3::ActionForHotKeyWinF(3)
+#F4::ActionForHotKeyWinF(4)
+#F5::ActionForHotKeyWinF(5)
+#F6::ActionForHotKeyWinF(6)
+#F7::ActionForHotKeyWinF(7)
+#F8::ActionForHotKeyWinF(8)
+#F9::ActionForHotKeyWinF(9)
+#F10::ActionForHotKeyWinF(10)
+#F11::ActionForHotKeyWinF(11)
+#F12::ActionForHotKeyWinF(12)
+
+
+
+ActionForHotKeyWinF(num)
+{
+	IniRead, HotkeyForFileWinF%num%, %Config_Add%, HotKeyForFileConfig, HotkeyForFile%num%,0
+	Run,% HotkeyForFileWinF%num%,,UseErrorLevel
+	Return
+}
+
+
+
+
+#IfWinActive
+
