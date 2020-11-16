@@ -39,11 +39,14 @@ showHotKeyforFile:
 		WinActivate
 		Return
 	}
-	Gui, New
-	Gui, +Resize
-	Gui Add, Tab2, x0 y0 w500 h800, 文件程序直通车|文件夹直通车
-	Gui Tab, 1
-	Gui Add, Text, x10 y+10 w50 h20 +0x200, 快捷键
+	Gui, New,
+	Gui, +Resize ToolWindow +MinSize
+	Gui Add, Button , gDone x10 y400 w30 h30 default, 保存所有配置
+
+	Gui Add, Tab2, x0 y0 w500 h800, 文件程序直通车|文件夹直通车|默认直通车 ;开始创建3个标签
+	
+	Gui Tab, 1	;处理标签1
+	Gui Add, Text, x10 y32 w50 h20 +0x200, 快捷键
 	Gui Add, Text, x+10  w300 h20 +0x200, 对应的文件或程序地址(不支持文件夹)
 	loop, 12
 	{
@@ -57,7 +60,7 @@ showHotKeyforFile:
 	Gui,Add,Text,x10 y+0 w480 h20,· Win键又称Windows键，一般在空格键或Ctrl键旁边
 	Gui,Add,Text,x10 y+0 w480 h20,· 第一行Win+F1意思是同时按下 Win 和 F1 这两个键。
 	
-	Gui Tab, 2
+	Gui Tab, 2	;处理标签2
 	Gui Add, Text, x10 y+10 w50 h20 +0x200, 快捷键
 	Gui Add, Text, x+10  w300 h20 +0x200, 对应的文件夹地址(仅支持文件夹)
 	loop, 9
@@ -81,12 +84,54 @@ showHotKeyforFile:
 	Gui,Add,Text,x10 y+0 w480 h20,· 设置简单：点击右侧的“+”按钮，选择文件夹，然后保存，即可一键直达。
 	Gui,Add,Text,x10 y+0 w480 h20,· Win键又称Windows键，一般在空格键或Ctrl键旁边
 	Gui,Add,Text,x10 y+0 w480 h20,· 第一行Win+1意思是同时按下 Win 和 1 这两个键。（不支持小键盘的数字1）
+	
+	
+	Gui Tab, 3 ;处理标签1
+	Gui Add, Text, x10 y32 w30 h23 +0x200, 激活
+	Gui Add, Text, x+10  w120 h23 +0x200, 快捷键
+	Gui Add, Text, x+10  w120 h23 +0x200, 打开 ;标题
+	
+	Gui Add, CheckBox, vCheckStatus_1  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+W
+	Gui Add, Text, x+10  w120 h23 +0x200, 我的电脑	
+	
+	Gui Add, CheckBox, vCheckStatus_2  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+C
+	Gui Add, Text, x+10  w120 h23 +0x200, C盘	
+	
+	Gui Add, CheckBox, vCheckStatus_3  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+D
+	Gui Add, Text, x+10  w120 h23 +0x200, D盘	
+	
+	Gui Add, CheckBox, vCheckStatus_4  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+E
+	Gui Add, Text, x+10  w120 h23 +0x200, E盘	
+	
+	Gui Add, CheckBox, vCheckStatus_5  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+F
+	Gui Add, Text, x+10  w120 h23 +0x200, F盘	
+	
+	Gui Add, CheckBox, vCheckStatus_6  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+G
+	Gui Add, Text, x+10  w120 h23 +0x200, G盘	
+	
+	Gui Add, CheckBox, vCheckStatus_7  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+H
+	Gui Add, Text, x+10  w120 h23 +0x200, H盘	
+	
+	Gui Add, CheckBox, vCheckStatus_8  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+Del
+	Gui Add, Text, x+10  w120 h23 +0x200, 回收站
+	
+	Gui Add, CheckBox, vCheckStatus_9  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+J
+	Gui Add, Text, x+10  w120 h23 +0x200, 计算器
+	
+	Gui Add, CheckBox, vCheckStatus_10  x10 y+0 w23 h23
+	Gui Add, Text, x+10  w120 h23 +0x200, Ctrl+Win+P
+	Gui Add, Text, x+10  w120 h23 +0x200, 画图
 
-
-
-	Gui Add, Button, gDone x10 y40 w30 h30, 保存
-
-	Gui Show, w500 h800, 文件直通车
+	Gui Show, w520 h600 center, 文件直通车
 
 	GUI_Init()
 
@@ -101,7 +146,8 @@ showHotKeyforFile:
 		return
 	loop,24
 	{
-		GuiControl, Move, Button%A_Index%, % "X" . (A_GuiWidth - 46)
+		buttonNum := A_Index + 1
+		GuiControl, Move, Button%buttonNum%, % "X" . (A_GuiWidth - 46)
 		GuiControl, Move, Edit%A_Index%, % "w" . (A_GuiWidth - 130)
 	}
 	GuiControl,Move, 保存, %  "y" . (A_GuiHeight - 40) . "w" . (A_GuiWidth - 20)
@@ -111,9 +157,10 @@ showHotKeyforFile:
 
 	GuiEscape:
 	GuiClose:
-		Gui, Destroy
+	{
+		Gui,Destroy
 		Return
-
+	}
 
 	;------------------------GUI：按钮功能------------------------*/
 
@@ -267,13 +314,6 @@ showHotKeyforFile:
 	}
 
 
-
-
-
-
-
-
-
 	Done:
 	{
 
@@ -283,9 +323,12 @@ showHotKeyforFile:
 			ControlGetText,FileTextForWinF%A_Index%,Edit%A_Index%,A
 			IniWrite, % FileTextForWinF%A_Index%, %Config_Add%, HotKeyForFileConfig, HotkeyForFile%A_Index%
 		}
+		
+		loop,10
+		{
+			IniWrite,% CheckStatus_%A_Index%,%Config_Add%, HotKeyForKeyConfig, HotkeyForKey_%A_Index%
+		}		
 		Return
-		}
-
 	}
 
 
@@ -298,8 +341,32 @@ showHotKeyforFile:
 			if TextStr <> 
 				ControlSetText,Edit%A_Index%,%TextStr%,A
 		}
+		
+		;初始化标签3的各个CheckBox的状态
+		loop,10
+		{
+			ButtonNo := A_Index + 25
+			IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_%A_Index%,0
+			if HotkeyStatus
+				Control,check,,Button%ButtonNo%,A	;调用了“Button+数字”的方法，感觉不健壮
+			else
+				Control,uncheck,,Button%ButtonNo%,A
+			
+		}
+		;IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_Ctrl_Win_W,0
+		;if HotkeyStatus
+			;Control,check,,Button26,A 	;调用了“Button+数字”的方法，感觉不健壮
+		
+		
+		
+		
+		
+		
 		Return
+	}
 }
+
+
 
 
 
@@ -332,7 +399,98 @@ showHotKeyforFile:
 	#0::ActionForHotKeyWinF(22)
 	#-::ActionForHotKeyWinF(23)
 	#=::ActionForHotKeyWinF(24)
-
+	
+	$#^w::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_1,0
+		if HotkeyStatus
+			run,::{20d04fe0-3aea-1069-a2d8-08002b30309d},,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^c::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_2,0
+		if HotkeyStatus
+			run,C:\,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^d::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_3,0
+		if HotkeyStatus
+			run,D:\,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^e::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_4,0
+		if HotkeyStatus
+			run,e:\,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^f::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_5,0
+		if HotkeyStatus
+			run,f:\,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^g::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_6,0
+		if HotkeyStatus
+			run,g:\,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^h::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_7,0
+		if HotkeyStatus
+			run,h:\,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^del::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_8,0
+		if HotkeyStatus
+			run,::{645ff040-5081-101b-9f08-00aa002f954e},,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^j::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_9,0
+		if HotkeyStatus
+			run,calc.exe,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	$#^p::
+	{
+		IniRead, HotkeyStatus, %Config_Add%, HotKeyForKeyConfig, HotkeyForKey_10,0
+		if HotkeyStatus
+			run,mspaint.exe,,UseErrorLevel
+		else
+			send,%A_ThisHotkey%
+		Return
+	}
+	
 	ActionForHotKeyWinF(num)
 	{
 		IniRead, HotkeyForFileWinF%num%, %Config_Add%, HotKeyForFileConfig, HotkeyForFile%num%,0
